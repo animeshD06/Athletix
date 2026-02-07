@@ -733,3 +733,124 @@
         width: 120px;
     }
 }
+
+/* 360° View Toggle */
+.view-toggle {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    background: var(--color-grey-100);
+    padding: var(--space-1);
+    border-radius: var(--radius-lg);
+    width: fit-content;
+}
+
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-grey-600);
+    background: transparent;
+    transition: all var(--transition-fast);
+}
+
+.toggle-btn:hover {
+    color: var(--color-dark-blue);
+}
+
+.toggle-btn.active {
+    background: var(--color-white);
+    color: var(--color-dark-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Gallery Standard Mode */
+.gallery-standard {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--space-4);
+}
+
+/* 360° Viewer Container */
+.viewer-360-container {
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+/* Add to Cart Button Animation */
+.add-to-cart-btn.adding {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.add-to-cart-btn.adding::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Wishlist Animation */
+.wishlist-btn.active {
+    animation: wishlist-pop 0.4s ease;
+}
+
+@keyframes wishlist-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Heart burst adjustments */
+.wishlist-btn .heart-burst-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive 360 toggle */
+@media (max-width: 768px) {
+    .view-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .gallery-standard {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-standard .gallery-thumbnails {
+        flex-direction: row;
+        order: 2;
+        overflow-x: auto;
+    }
+
+    .gallery-standard .gallery-main {
+        order: 1;
+    }
+}

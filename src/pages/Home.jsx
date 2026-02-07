@@ -1,420 +1,296 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    ArrowRight, ChevronLeft, ChevronRight, Star,
-    Zap, Target, Award, TrendingUp
+    ArrowRight, Zap, Play, Star,
+    ChevronRight
 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import {
-    products, categories, reviews, bannerSlides,
-    getBestSellers, getNewArrivals, formatPrice
+    PersonalizedRecommendations,
+    RecentlyViewed,
+    TrendingProducts
+} from '../components/RecommendationSection';
+import {
+    products, categories, getBestSellers, getNewArrivals, formatPrice
 } from '../data/products';
 import './Home.css';
 
+// Generate random stars for background
+const generateStars = (count) => {
+    const stars = [];
+    for (let i = 0; i < count; i++) {
+        stars.push({
+            id: i,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            size: Math.random() * 2 + 1
+        });
+    }
+    return stars;
+};
+
 const Home = () => {
-    const [currentSlide, setCurrentSlide] = useState(0);
     const bestSellers = getBestSellers();
     const newArrivals = getNewArrivals();
+    const featuredProducts = products.slice(0, 4);
 
-    // Auto-advance hero slider
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
-        }, 5000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % bannerSlides.length);
-    };
-
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
-    };
+    // Generate stars once
+    const stars = useMemo(() => generateStars(100), []);
+    const ctaStars = useMemo(() => generateStars(50), []);
 
     return (
         <main className="home">
-            {/* Hero Section */}
-            <section className="hero">
-                <div className="hero-slider">
-                    {bannerSlides.map((slide, index) => (
+            {/* ============================================
+                1. HERO SECTION - Beyond Gravity
+            ============================================ */}
+            <section className="hero-galaxy">
+                {/* Animated Stars Background */}
+                <div className="stars-container">
+                    {stars.map((star) => (
                         <div
-                            key={slide.id}
-                            className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-                            style={{ backgroundImage: `url(${slide.image})` }}
-                        >
-                            <div className="hero-overlay" />
-                            <div className="container">
-                                <div className="hero-content">
-                                    <span className="hero-label animate-fade-in-down">
-                                        <Zap size={16} />
-                                        Athletix Sports
-                                    </span>
-                                    <h1 className="hero-title">
-                                        <span className="animate-fade-in-left stagger-1">{slide.title}</span>
-                                        <span className="animate-fade-in-left stagger-2">{slide.subtitle}</span>
-                                        <span className="highlight animate-fade-in-left stagger-3">{slide.highlight}</span>
-                                    </h1>
-                                    <p className="hero-description animate-fade-in-up stagger-4">
-                                        {slide.description}
-                                    </p>
-                                    <div className="hero-buttons animate-fade-in-up stagger-5">
-                                        <Link to="/shop" className="btn btn-primary btn-lg">
-                                            {slide.cta}
-                                            <ArrowRight size={20} />
-                                        </Link>
-                                        <Link to="/shop" className="btn btn-white btn-lg">
-                                            Explore Categories
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            key={star.id}
+                            className="star"
+                            style={{
+                                left: star.left,
+                                top: star.top,
+                                animationDelay: star.animationDelay,
+                                width: `${star.size}px`,
+                                height: `${star.size}px`
+                            }}
+                        />
                     ))}
                 </div>
 
-                {/* Slider Controls */}
-                <div className="hero-controls">
-                    <button className="hero-nav prev" onClick={prevSlide}>
-                        <ChevronLeft size={24} />
-                    </button>
-                    <div className="hero-dots">
-                        {bannerSlides.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`hero-dot ${index === currentSlide ? 'active' : ''}`}
-                                onClick={() => setCurrentSlide(index)}
-                            />
-                        ))}
+                {/* Nebula Glow Effects */}
+                <div className="nebula nebula-1" />
+                <div className="nebula nebula-2" />
+                <div className="nebula nebula-3" />
+
+                {/* Floating Particles */}
+                <div className="particles">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className="particle" />
+                    ))}
+                </div>
+
+                <div className="container">
+                    {/* Hero Text Content */}
+                    <div className="hero-text-content">
+                        <span className="hero-galaxy-label">
+                            <Zap size={14} />
+                            Athletix Sports
+                        </span>
+
+                        <h1 className="hero-galaxy-title">
+                            ATHLETIX
+                        </h1>
+
+                        <p className="hero-galaxy-subtitle">
+                            Beyond Limits. Beyond Gravity.
+                        </p>
+
+                        <div className="hero-galaxy-buttons">
+                            <Link to="/shop" className="btn-galaxy-primary">
+                                Shop Collection
+                                <ArrowRight size={18} />
+                            </Link>
+                            <button className="btn-galaxy-secondary">
+                                <Play size={18} />
+                                Watch Gear
+                            </button>
+                        </div>
                     </div>
-                    <button className="hero-nav next" onClick={nextSlide}>
-                        <ChevronRight size={24} />
-                    </button>
+
+                    {/* Floating 3D Product */}
+                    <div className="hero-3d-product">
+                        <div className="floating-product">
+                            <img
+                                src="hero-shoe.png"
+                                alt="Featured Shoe"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Scroll Indicator */}
-                <div className="scroll-indicator">
-                    <span>Scroll to explore</span>
-                    <div className="scroll-line">
-                        <div className="scroll-dot" />
-                    </div>
+                <div className="scroll-indicator-galaxy">
+                    <span>Scroll to Explore</span>
+                    <div className="scroll-arrow" />
                 </div>
             </section>
 
-            {/* Features Strip */}
-            <section className="features-strip">
-                <div className="container">
-                    <div className="features-grid">
-                        <div className="feature-item">
-                            <div className="feature-icon">
-                                <Zap size={24} />
-                            </div>
-                            <div className="feature-text">
-                                <strong>Premium Quality</strong>
-                                <span>Top-grade materials</span>
-                            </div>
-                        </div>
-                        <div className="feature-item">
-                            <div className="feature-icon">
-                                <Target size={24} />
-                            </div>
-                            <div className="feature-text">
-                                <strong>Performance Tested</strong>
-                                <span>By pro athletes</span>
-                            </div>
-                        </div>
-                        <div className="feature-item">
-                            <div className="feature-icon">
-                                <Award size={24} />
-                            </div>
-                            <div className="feature-text">
-                                <strong>Award Winning</strong>
-                                <span>Trusted brand</span>
-                            </div>
-                        </div>
-                        <div className="feature-item">
-                            <div className="feature-icon">
-                                <TrendingUp size={24} />
-                            </div>
-                            <div className="feature-text">
-                                <strong>Performance Boost</strong>
-                                <span>Level up your game</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Categories Section */}
-            <section className="section categories-section">
+
+
+
+
+            {/* ============================================
+                4. FEATURED PRODUCTS - Floating Cards
+            ============================================ */}
+            <section className="featured-galaxy">
                 <div className="container">
-                    <div className="section-header">
-                        <div>
-                            <span className="section-label">Browse By Sport</span>
-                            <h2 className="section-title">Shop by Category</h2>
-                        </div>
-                        <Link to="/shop" className="view-all-link">
-                            View All Categories
-                            <ArrowRight size={18} />
-                        </Link>
+                    <div className="section-header-galaxy">
+                        <span className="section-label-galaxy">New Drops</span>
+                        <h2 className="section-title-galaxy">Featured Products</h2>
                     </div>
 
-                    <div className="categories-grid">
-                        {categories.map((category, index) => (
+                    <div className="products-grid-galaxy">
+                        {featuredProducts.map((product, index) => (
                             <Link
-                                key={category.id}
-                                to={`/shop?category=${category.slug}`}
-                                className="category-card"
-                                style={{ animationDelay: `${index * 0.1}s` }}
+                                to={`/product/${product.slug}`}
+                                key={product.id}
+                                className="product-card-galaxy"
+                                data-aos="fade-up"
+                                data-aos-delay={index * 100}
                             >
-                                <div className="category-image">
-                                    <img src={category.image} alt={category.name} />
-                                    <div className="category-overlay" />
+                                <div className="product-image-container">
+                                    <img src={product.images[0]} alt={product.name} />
+                                    <div className="product-glow" />
                                 </div>
-                                <div className="category-content">
-                                    <span className="category-icon">{category.icon}</span>
-                                    <h3 className="category-name">{category.name}</h3>
-                                    <p className="category-desc">{category.description}</p>
-                                    <span className="category-cta">
-                                        Shop Now <ArrowRight size={16} />
-                                    </span>
+                                <div className="product-info-galaxy">
+                                    <h3 className="product-name-galaxy">{product.name}</h3>
+                                    <p className="product-price-galaxy">{formatPrice(product.price)}</p>
+                                </div>
+                                <div className="product-add-cart">
+                                    Add to Cart
                                 </div>
                             </Link>
                         ))}
                     </div>
-                </div>
-            </section>
 
-            {/* Best Sellers Section */}
-            <section className="section bestsellers-section">
-                <div className="container">
-                    <div className="section-header">
-                        <div>
-                            <span className="section-label">Top Picks</span>
-                            <h2 className="section-title">Best Sellers</h2>
-                        </div>
-                        <Link to="/shop?filter=bestseller" className="view-all-link">
-                            View All
+                    <div style={{ textAlign: 'center', marginTop: 'var(--space-10)' }}>
+                        <Link to="/shop" className="btn-galaxy-primary">
+                            View All Products
                             <ArrowRight size={18} />
                         </Link>
                     </div>
-
-                    <div className="products-grid">
-                        {bestSellers.slice(0, 8).map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
                 </div>
             </section>
 
-            {/* Promo Banner */}
-            <section className="promo-banner">
-                <div className="promo-bg" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1920&h=600&fit=crop)' }} />
-                <div className="promo-overlay" />
-                <div className="container">
-                    <div className="promo-content">
-                        <span className="promo-label">Limited Time Offer</span>
-                        <h2 className="promo-title">Up to 40% Off Running Gear</h2>
-                        <p className="promo-text">
-                            Get ready for the season with professional running equipment designed for performance.
-                        </p>
-                        <div className="promo-buttons">
-                            <Link to="/shop?category=running" className="btn btn-primary btn-lg">
-                                Shop Running
-                                <ArrowRight size={20} />
-                            </Link>
-                        </div>
+            {/* ============================================
+                5. CATEGORY EXPLORATION
+            ============================================ */}
+            <section className="categories-galaxy">
+                <Link to="/shop?category=men" className="category-galaxy-card">
+                    <div
+                        className="category-galaxy-bg"
+                        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800)' }}
+                    />
+                    <div className="category-galaxy-overlay" />
+                    <div className="category-galaxy-content">
+                        <h3 className="category-galaxy-title">Men</h3>
+                        <span className="category-galaxy-btn">
+                            Explore
+                            <ChevronRight size={20} />
+                        </span>
                     </div>
-                </div>
+                </Link>
+
+                <Link to="/shop?category=women" className="category-galaxy-card">
+                    <div
+                        className="category-galaxy-bg"
+                        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800)' }}
+                    />
+                    <div className="category-galaxy-overlay" />
+                    <div className="category-galaxy-content">
+                        <h3 className="category-galaxy-title">Women</h3>
+                        <span className="category-galaxy-btn">
+                            Explore
+                            <ChevronRight size={20} />
+                        </span>
+                    </div>
+                </Link>
             </section>
 
-            {/* New Arrivals Section */}
-            <section className="section new-arrivals-section">
+            {/* ============================================
+                6. SOCIAL PROOF / COMMUNITY
+            ============================================ */}
+            <section className="social-proof-galaxy">
                 <div className="container">
-                    <div className="section-header">
+                    <h2 className="proof-title">Trusted by Athletes Across India</h2>
+                    <p className="proof-subtitle">Join thousands of athletes who choose Athletix</p>
+
+                    <div className="rating-display">
+                        <span className="rating-number">4.8</span>
                         <div>
-                            <span className="section-label">Fresh Drops</span>
-                            <h2 className="section-title">New Arrivals</h2>
+                            <div className="rating-stars">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star key={i} size={24} fill={i < 4 ? '#fbbf24' : 'none'} />
+                                ))}
+                            </div>
+                            <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.875rem' }}>
+                                Based on 10,000+ reviews
+                            </span>
                         </div>
-                        <Link to="/shop?filter=new" className="view-all-link">
-                            View All
-                            <ArrowRight size={18} />
-                        </Link>
                     </div>
 
-                    <div className="products-grid">
-                        {newArrivals.slice(0, 4).map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
+                    <div className="proof-stats">
+                        <div className="proof-stat" data-aos="fade-up">
+                            <div className="proof-stat-number">50K+</div>
+                            <div className="proof-stat-label">Happy Athletes</div>
+                        </div>
+                        <div className="proof-stat" data-aos="fade-up" data-aos-delay="100">
+                            <div className="proof-stat-number">100+</div>
+                            <div className="proof-stat-label">Cities Delivered</div>
+                        </div>
+                        <div className="proof-stat" data-aos="fade-up" data-aos-delay="200">
+                            <div className="proof-stat-number">4.8★</div>
+                            <div className="proof-stat-label">Average Rating</div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Dual Promo */}
-            <section className="section dual-promo">
+            {/* ============================================
+                AI-Powered Recommendations
+            ============================================ */}
+            <section className="featured-galaxy">
                 <div className="container">
-                    <div className="dual-promo-grid">
+                    <PersonalizedRecommendations limit={4} />
+                    <div style={{ marginTop: 'var(--space-16)' }}>
+                        <TrendingProducts limit={4} />
+                    </div>
+                </div>
+            </section>
+
+            {/* ============================================
+                7. FINAL CTA
+            ============================================ */}
+            <section className="final-cta-galaxy">
+                {/* Animated Stars Background */}
+                <div className="stars-container">
+                    {ctaStars.map((star) => (
                         <div
-                            className="promo-card"
-                            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=500&fit=crop)' }}
-                        >
-                            <div className="promo-card-overlay" />
-                            <div className="promo-card-content">
-                                <span className="promo-card-label">Gym & Fitness</span>
-                                <h3 className="promo-card-title">Build Your Home Gym</h3>
-                                <p>Professional equipment at best prices</p>
-                                <Link to="/shop?category=gym-fitness" className="btn btn-white">
-                                    Shop Now <ArrowRight size={16} />
-                                </Link>
-                            </div>
-                        </div>
+                            key={star.id}
+                            className="star"
+                            style={{
+                                left: star.left,
+                                top: star.top,
+                                animationDelay: star.animationDelay,
+                                width: `${star.size}px`,
+                                height: `${star.size}px`
+                            }}
+                        />
+                    ))}
+                </div>
 
-                        <div
-                            className="promo-card"
-                            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=500&fit=crop)' }}
-                        >
-                            <div className="promo-card-overlay" />
-                            <div className="promo-card-content">
-                                <span className="promo-card-label">Sportswear</span>
-                                <h3 className="promo-card-title">New Athleisure Collection</h3>
-                                <p>Style meets performance</p>
-                                <Link to="/shop?category=sportswear" className="btn btn-white">
-                                    Shop Now <ArrowRight size={16} />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                <div className="cta-content">
+                    <h2 className="cta-title">
+                        Ready to Move
+                        <span>Beyond Limits?</span>
+                    </h2>
+                    <Link to="/shop" className="btn-galaxy-primary" style={{ fontSize: '1.125rem', padding: '1.25rem 3rem' }}>
+                        Shop Athletix Now
+                        <ArrowRight size={20} />
+                    </Link>
                 </div>
             </section>
 
-            {/* Reviews Section */}
-            <section className="section reviews-section">
+            {/* Recently Viewed (if available) */}
+            <section className="featured-galaxy">
                 <div className="container">
-                    <div className="section-header center">
-                        <span className="section-label">Customer Love</span>
-                        <h2 className="section-title">What Athletes Say</h2>
-                    </div>
-
-                    <div className="reviews-grid">
-                        {reviews.map((review) => (
-                            <div key={review.id} className="review-card">
-                                <div className="review-rating">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            size={16}
-                                            fill={i < review.rating ? 'currentColor' : 'none'}
-                                            className={i < review.rating ? 'filled' : ''}
-                                        />
-                                    ))}
-                                </div>
-                                <h4 className="review-title">{review.title}</h4>
-                                <p className="review-comment">{review.comment}</p>
-                                <div className="review-author">
-                                    <img src={review.avatar} alt={review.name} />
-                                    <div>
-                                        <span className="author-name">{review.name}</span>
-                                        {review.verified && (
-                                            <span className="verified-badge">Verified Purchase</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Brand Story */}
-            <section className="brand-story-section">
-                <div className="container">
-                    <div className="brand-story-grid">
-                        <div className="brand-story-images">
-                            <div className="brand-image main">
-                                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&h=600&fit=crop" alt="Athletes training" />
-                            </div>
-                            <div className="brand-image secondary">
-                                <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=300&h=350&fit=crop" alt="Sports equipment" />
-                            </div>
-                            <div className="brand-stats">
-                                <div className="stat">
-                                    <span className="stat-number">50K+</span>
-                                    <span className="stat-label">Happy Athletes</span>
-                                </div>
-                                <div className="stat">
-                                    <span className="stat-number">100+</span>
-                                    <span className="stat-label">Premium Products</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="brand-story-content">
-                            <span className="section-label">Our Story</span>
-                            <h2 className="section-title">Unleash the Athlete in You</h2>
-                            <p className="brand-story-text">
-                                At Athletix, we believe every person has an athlete within. Our mission is to provide
-                                premium sports gear that helps you unlock your full potential, whether you're a
-                                professional athlete or just starting your fitness journey.
-                            </p>
-                            <p className="brand-story-text">
-                                Each product is designed with precision, tested by professionals, and built to
-                                withstand the demands of intense training. We don't just sell sports gear – we
-                                empower champions.
-                            </p>
-                            <div className="brand-values">
-                                <div className="value">
-                                    <span className="value-icon">💪</span>
-                                    <span>Premium Quality</span>
-                                </div>
-                                <div className="value">
-                                    <span className="value-icon">🏆</span>
-                                    <span>Professional Grade</span>
-                                </div>
-                                <div className="value">
-                                    <span className="value-icon">🌟</span>
-                                    <span>Athlete Approved</span>
-                                </div>
-                            </div>
-                            <Link to="/about" className="btn btn-primary">
-                                Learn More About Us
-                                <ArrowRight size={18} />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Instagram Feed Placeholder */}
-            <section className="section instagram-section">
-                <div className="container">
-                    <div className="section-header center">
-                        <span className="section-label">@athletix</span>
-                        <h2 className="section-title">Follow Us on Instagram</h2>
-                    </div>
-
-                    <div className="instagram-grid">
-                        {[
-                            'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=300&h=300&fit=crop',
-                            'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=300&h=300&fit=crop',
-                            'https://images.unsplash.com/photo-1461896836934- voices.png?w=300&h=300&fit=crop',
-                            'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=300&h=300&fit=crop',
-                            'https://images.unsplash.com/photo-1556906781-9a412961c28c?w=300&h=300&fit=crop',
-                            'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=300&h=300&fit=crop'
-                        ].map((img, index) => (
-                            <a
-                                key={index}
-                                href="https://instagram.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="instagram-item"
-                            >
-                                <img src={img} alt={`Instagram post ${index + 1}`} />
-                                <div className="instagram-overlay">
-                                    <span>@athletix</span>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
+                    <RecentlyViewed limit={4} />
                 </div>
             </section>
         </main>

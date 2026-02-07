@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingCart, Eye, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { toast } from './MicroInteractions';
 import { formatPrice } from '../data/products';
 import './ProductCard.css';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, compact = false }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
@@ -18,13 +21,21 @@ const ProductCard = ({ product }) => {
     const handleAddToCart = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        addToCart(product, product.colors?.[0] || '', product.sizes?.[0] || '', 1);
+        setIsAddingToCart(true);
+
+        setTimeout(() => {
+            addToCart(product, product.colors?.[0] || '', product.sizes?.[0] || '', 1);
+            toast.cart(product.name);
+            setIsAddingToCart(false);
+        }, 300);
     };
 
     const handleWishlist = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const wasInWishlist = inWishlist;
         toggleWishlist(product);
+        toast.wishlist(product.name, !wasInWishlist);
     };
 
     return (

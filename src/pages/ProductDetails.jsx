@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     Heart, ShoppingCart, Minus, Plus, Star, Check,
     Truck, RotateCcw, Shield, Share2, ChevronRight,
-    ZoomIn
+    ZoomIn, View
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
+import ProductViewer360 from '../components/ProductViewer360';
+import { SimilarProducts, CompleteMyLook } from '../components/RecommendationSection';
+import { toast, FlyingCartAnimation, HeartBurstAnimation } from '../components/MicroInteractions';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useRecommendations } from '../context/RecommendationContext';
 import {
     getProductBySlug, getProductsByCategory,
     formatPrice, colors as colorOptions, reviews as allReviews
@@ -25,9 +30,17 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description');
     const [isZoomed, setIsZoomed] = useState(false);
+    const [show360View, setShow360View] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [flyingCart, setFlyingCart] = useState({ active: false, start: null, end: null });
+    const [showHeartBurst, setShowHeartBurst] = useState(false);
+
+    const addToCartBtnRef = useRef(null);
+    const cartIconRef = useRef(null);
 
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
+    const { trackProductView } = useRecommendations();
 
     const inWishlist = product ? isInWishlist(product.id) : false;
 
@@ -43,6 +56,10 @@ const ProductDetails = () => {
             setSelectedSize(product.sizes?.[0] || '');
             setSelectedImage(0);
             setQuantity(1);
+            setShow360View(false);
+
+            // Track product view for AI recommendations
+            trackProductView(product.id, product.category);
         }
     }, [slug, product]);
 
@@ -59,12 +76,47 @@ const ProductDetails = () => {
     }
 
     const handleAddToCart = () => {
-        addToCart(product, selectedColor, selectedSize, quantity);
+        setIsAddingToCart(true);
+
+        // Get button position for flying animation
+        const btn = addToCartBtnRef.current;
+        const cartIcon = document.querySelector('.cart-icon'); // Header cart icon
+
+        if (btn && cartIcon) {
+            const btnRect = btn.getBoundingClientRect();
+            const cartRect = cartIcon.getBoundingClientRect();
+
+            setFlyingCart({
+                active: true,
+                start: { x: btnRect.left + btnRect.width / 2, y: btnRect.top },
+                end: { x: cartRect.left + cartRect.width / 2, y: cartRect.top }
+            });
+        }
+
+        // Add to cart after small delay
+        setTimeout(() => {
+            addToCart(product, selectedColor, selectedSize, quantity);
+            toast.cart(product.name);
+            setIsAddingToCart(false);
+        }, 600);
     };
 
     const handleBuyNow = () => {
         addToCart(product, selectedColor, selectedSize, quantity);
+        toast.success('Processing your order...');
         navigate('/checkout');
+    };
+
+    const handleWishlistToggle = () => {
+        const wasInWishlist = inWishlist;
+        toggleWishlist(product);
+
+        if (!wasInWishlist) {
+            setShowHeartBurst(true);
+            toast.wishlist(product.name, true);
+        } else {
+            toast.wishlist(product.name, false);
+        }
     };
 
     const getColorHex = (colorName) => {
@@ -97,37 +149,90 @@ const ProductDetails = () => {
                     <div className="product-grid">
                         {/* Image Gallery */}
                         <div className="product-gallery">
-                            <div className="gallery-thumbnails">
-                                {product.images.map((image, index) => (
-                                    <button
-                                        key={index}
-                                        className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
-                                        onClick={() => setSelectedImage(index)}
-                                    >
-                                        <img src={image} alt={`${product.name} view ${index + 1}`} />
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div
-                                className={`gallery-main ${isZoomed ? 'zoomed' : ''}`}
-                                onClick={() => setIsZoomed(!isZoomed)}
-                            >
-                                <img src={product.images[selectedImage]} alt={product.name} />
-                                <button className="zoom-btn">
-                                    <ZoomIn size={20} />
+                            {/* View Toggle */}
+                            <div className="view-toggle">
+                                <button
+                                    className={`toggle-btn ${!show360View ? 'active' : ''}`}
+                                    onClick={() => setShow360View(false)}
+                                >
+                                    <ZoomIn size={16} />
+                                    Gallery
                                 </button>
-
-                                {/* Badges */}
-                                <div className="product-badges">
-                                    {product.isNew && (
-                                        <span className="badge badge-new">New</span>
-                                    )}
-                                    {product.discount > 0 && (
-                                        <span className="badge badge-sale">-{product.discount}%</span>
-                                    )}
-                                </div>
+                                <button
+                                    className={`toggle-btn ${show360View ? 'active' : ''}`}
+                                    onClick={() => setShow360View(true)}
+                                >
+                                    <View size={16} />
+                                    Interactive View
+                                </button>
                             </div>
+
+                            <AnimatePresence mode="wait">
+                                {show360View ? (
+                                    <motion.div
+                                        key="360view"
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="viewer-360-container"
+                                    >
+                                        <ProductViewer360
+                                            images={product.images}
+                                            productName={product.name}
+                                            autoRotate={false}
+                                        />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="gallery"
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="gallery-standard"
+                                    >
+                                        <div className="gallery-thumbnails">
+                                            {product.images.map((image, index) => (
+                                                <button
+                                                    key={index}
+                                                    className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
+                                                    onClick={() => setSelectedImage(index)}
+                                                >
+                                                    <img src={image} alt={`${product.name} view ${index + 1}`} />
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <div
+                                            className={`gallery-main ${isZoomed ? 'zoomed' : ''}`}
+                                            onClick={() => setIsZoomed(!isZoomed)}
+                                        >
+                                            <motion.img
+                                                key={selectedImage}
+                                                src={product.images[selectedImage]}
+                                                alt={product.name}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 0.2 }}
+                                            />
+                                            <button className="zoom-btn">
+                                                <ZoomIn size={20} />
+                                            </button>
+
+                                            {/* Badges */}
+                                            <div className="product-badges">
+                                                {product.isNew && (
+                                                    <span className="badge badge-new">New</span>
+                                                )}
+                                                {product.discount > 0 && (
+                                                    <span className="badge badge-sale">-{product.discount}%</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Product Info */}
@@ -247,31 +352,51 @@ const ProductDetails = () => {
 
                             {/* Action Buttons */}
                             <div className="action-buttons">
-                                <button
-                                    className="btn btn-primary btn-lg add-to-cart-btn"
+                                <motion.button
+                                    ref={addToCartBtnRef}
+                                    className={`btn btn-primary btn-lg add-to-cart-btn ${isAddingToCart ? 'adding' : ''}`}
                                     onClick={handleAddToCart}
-                                    disabled={!product.inStock}
+                                    disabled={!product.inStock || isAddingToCart}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     <ShoppingCart size={20} />
-                                    Add to Cart
-                                </button>
-                                <button
+                                    {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                                </motion.button>
+                                <motion.button
                                     className="btn btn-secondary btn-lg buy-now-btn"
                                     onClick={handleBuyNow}
                                     disabled={!product.inStock}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     Buy Now
-                                </button>
-                                <button
+                                </motion.button>
+                                <motion.button
                                     className={`btn-icon wishlist-btn ${inWishlist ? 'active' : ''}`}
-                                    onClick={() => toggleWishlist(product)}
+                                    onClick={handleWishlistToggle}
+                                    whileTap={{ scale: 0.85 }}
                                 >
-                                    <Heart size={22} fill={inWishlist ? 'currentColor' : 'none'} />
-                                </button>
+                                    {showHeartBurst && (
+                                        <HeartBurstAnimation
+                                            isActive={showHeartBurst}
+                                            onComplete={() => setShowHeartBurst(false)}
+                                        />
+                                    )}
+                                    {!showHeartBurst && (
+                                        <Heart size={22} fill={inWishlist ? 'currentColor' : 'none'} />
+                                    )}
+                                </motion.button>
                                 <button className="btn-icon share-btn">
                                     <Share2 size={22} />
                                 </button>
                             </div>
+
+                            {/* Flying Cart Animation */}
+                            <FlyingCartAnimation
+                                isActive={flyingCart.active}
+                                startPosition={flyingCart.start}
+                                endPosition={flyingCart.end}
+                                onComplete={() => setFlyingCart({ active: false, start: null, end: null })}
+                            />
 
                             {/* Trust Badges */}
                             <div className="trust-features">
@@ -419,25 +544,11 @@ const ProductDetails = () => {
                 </div>
             </section>
 
-            {/* Related Products */}
-            {relatedProducts.length > 0 && (
-                <section className="related-section section">
-                    <div className="container">
-                        <div className="section-header">
-                            <h2 className="section-title">You May Also Like</h2>
-                            <Link to={`/shop?category=${product.category}`} className="view-all-link">
-                                View All <ChevronRight size={18} />
-                            </Link>
-                        </div>
+            {/* AI-Powered Similar Products */}
+            <SimilarProducts currentProduct={product} limit={4} />
 
-                        <div className="products-grid">
-                            {relatedProducts.map(p => (
-                                <ProductCard key={p.id} product={p} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
+            {/* Complete My Look - Complementary Products */}
+            <CompleteMyLook currentProduct={product} />
         </main>
     );
 };

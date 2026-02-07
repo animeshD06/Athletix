@@ -168,40 +168,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* ============================================
-                5. CATEGORY EXPLORATION
-            ============================================ */}
-            <section className="categories-galaxy">
-                <Link to="/shop?category=men" className="category-galaxy-card">
-                    <div
-                        className="category-galaxy-bg"
-                        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800)' }}
-                    />
-                    <div className="category-galaxy-overlay" />
-                    <div className="category-galaxy-content">
-                        <h3 className="category-galaxy-title">Men</h3>
-                        <span className="category-galaxy-btn">
-                            Explore
-                            <ChevronRight size={20} />
-                        </span>
-                    </div>
-                </Link>
 
-                <Link to="/shop?category=women" className="category-galaxy-card">
-                    <div
-                        className="category-galaxy-bg"
-                        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800)' }}
-                    />
-                    <div className="category-galaxy-overlay" />
-                    <div className="category-galaxy-content">
-                        <h3 className="category-galaxy-title">Women</h3>
-                        <span className="category-galaxy-btn">
-                            Explore
-                            <ChevronRight size={20} />
-                        </span>
-                    </div>
-                </Link>
-            </section>
 
             {/* ============================================
                 6. SOCIAL PROOF / COMMUNITY

@@ -1,0 +1,436 @@
+/* About Page Styles */
+
+.about-page {
+    overflow-x: hidden;
+}
+
+/* About Hero */
+.about-hero {
+    position: relative;
+    padding: var(--space-32) 0;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    color: var(--color-white);
+}
+
+.about-hero .hero-bg {
+    position: absolute;
+    inset: 0;
+}
+
+.about-hero .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-hero);
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.about-hero .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-8);
+}
+
+.about-hero .breadcrumb a {
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
+}
+
+.about-hero .breadcrumb a:hover {
+    opacity: 1;
+}
+
+.about-hero .hero-content {
+    max-width: 700px;
+}
+
+.about-hero h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-6xl);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-6);
+}
+
+.about-hero h1 span {
+    display: block;
+    color: var(--color-red);
+}
+
+.about-hero p {
+    font-size: var(--font-size-xl);
+    opacity: 0.9;
+    line-height: var(--line-height-relaxed);
+}
+
+/* Mission Section */
+.mission-section {
+    background: var(--color-white);
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+}
+
+.mission-content p {
+    color: var(--color-grey-600);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+}
+
+.mission-highlights {
+    margin-top: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.highlight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-dark-blue);
+    font-weight: var(--font-weight-medium);
+}
+
+.highlight svg {
+    color: var(--color-red);
+}
+
+.mission-image {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-2xl);
+}
+
+.mission-image img {
+    width: 100%;
+    height: auto;
+}
+
+/* Stats Section */
+.stats-section {
+    background: var(--gradient-primary);
+    padding: var(--space-16) 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+}
+
+.stat-item {
+    text-align: center;
+    color: var(--color-white);
+}
+
+.stat-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-black);
+    margin-bottom: var(--space-2);
+}
+
+.stat-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+    font-size: var(--font-size-sm);
+}
+
+/* Values Section */
+.values-section {
+    background: var(--color-grey-100);
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+}
+
+.value-card {
+    background: var(--color-white);
+    padding: var(--space-8);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.value-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto var(--space-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-red);
+    color: var(--color-white);
+    border-radius: var(--radius-xl);
+}
+
+.value-card h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-3);
+}
+
+.value-card p {
+    font-size: var(--font-size-sm);
+    color: var(--color-grey-600);
+    line-height: var(--line-height-relaxed);
+}
+
+/* Story Section */
+.story-section {
+    background: var(--color-white);
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+}
+
+.story-images {
+    position: relative;
+}
+
+.story-image {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.story-image.main {
+    width: 80%;
+}
+
+.story-image.secondary {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    border: 4px solid var(--color-white);
+}
+
+.story-image img {
+    width: 100%;
+    height: auto;
+}
+
+.story-content p {
+    color: var(--color-grey-600);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+}
+
+.story-content .btn {
+    margin-top: var(--space-6);
+}
+
+/* Team Section */
+.team-section {
+    background: var(--color-grey-100);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+}
+
+.team-card {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.team-image {
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.team-card:hover .team-image img {
+    transform: scale(1.05);
+}
+
+.team-info {
+    padding: var(--space-6);
+    text-align: center;
+}
+
+.team-info h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-1);
+}
+
+.team-role {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-red);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-4);
+}
+
+.team-quote {
+    font-style: italic;
+    color: var(--color-grey-600);
+    font-size: var(--font-size-sm);
+}
+
+/* CTA Section */
+.cta-section {
+    background: var(--gradient-primary);
+    padding: var(--space-20) 0;
+}
+
+.cta-content {
+    text-align: center;
+    color: var(--color-white);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--space-4);
+}
+
+.cta-content p {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    margin-bottom: var(--space-8);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+}
+
+.cta-section .btn-outline {
+    border-color: var(--color-white);
+    color: var(--color-white);
+}
+
+.cta-section .btn-outline:hover {
+    background: var(--color-white);
+    color: var(--color-dark-blue);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+
+    .mission-grid,
+    .story-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+    }
+
+    .mission-image {
+        order: -1;
+    }
+
+    .story-images {
+        order: -1;
+    }
+
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: var(--space-20) 0;
+        min-height: auto;
+    }
+
+    .about-hero h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    .about-hero p {
+        font-size: var(--font-size-lg);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+    }
+
+    .stat-number {
+        font-size: var(--font-size-4xl);
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .story-image.secondary {
+        display: none;
+    }
+
+    .story-image.main {
+        width: 100%;
+    }
+
+    .cta-content h2 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}

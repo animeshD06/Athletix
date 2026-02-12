@@ -17,6 +17,9 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Documentation files
+*QUICK_REFERENCE.md
+*DATABASE_SETUP_GUIDE.md
 
 # Editor directories and files
 .vscode/*

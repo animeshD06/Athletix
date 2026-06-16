@@ -1,0 +1,57 @@
+.terms-page {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.terms-header {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  padding: 3rem 0;
+  color: #fff;
+}
+
+.terms-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.terms-updated {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.terms-content {
+  padding: 3rem 0 5rem;
+}
+
+.terms-body {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.terms-section {
+  margin-bottom: 2.5rem;
+}
+
+.terms-section h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary, #111);
+}
+
+.terms-section p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary, #555);
+}
+
+.terms-section a {
+  color: var(--primary, #000);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.terms-section a:hover {
+  opacity: 0.7;
+}

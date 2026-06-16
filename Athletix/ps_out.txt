@@ -1,0 +1,4 @@
+NAME                IMAGE            COMMAND                  SERVICE    CREATED         STATUS         PORTS
+athletix_backend    ecomm-backend    "docker-entrypoint.s…"   backend    3 minutes ago   Up 3 minutes   0.0.0.0:5001->5000/tcp, [::]:5001->5000/tcp
+athletix_frontend   ecomm-frontend   "/docker-entrypoint.…"   frontend   3 minutes ago   Up 3 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
+athletix_mongodb    mongo:latest     "docker-entrypoint.s…"   mongodb    3 minutes ago   Up 3 minutes   0.0.0.0:27018->27017/tcp, [::]:27018->27017/tcp
